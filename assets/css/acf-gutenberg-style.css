@@ -1,0 +1,150 @@
+/*Visibility*/
+@media (min-width: 993px) {
+    .vs-hide-on-desktop {
+        display: none !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 992px) {
+    .vs-hide-on-tablet {
+        display: none !important;
+    }
+}
+@media (max-width: 767px) {
+    .vs-hide-on-mobile {
+        display: none !important;
+    }
+}
+
+.vs-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+}
+.vs-section {
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.vs-background__video-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+.vs-background__video-wrapper video {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.vs-content-wrapper {
+    position: relative;
+    z-index: 1;
+}
+.vs-bg-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0, 0.4);
+}
+
+/*button*/
+.vs-btn-body {
+    min-height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: bold;
+    padding: 8px 20px;
+    background-color: #fe7900;
+    color: #fff;
+    transition: all .2s;
+    text-decoration: none;
+}
+.vs-btn-body:hover {
+    background-color: #202020;
+}
+
+/*Flex*/
+.vs-d-flex {
+    display: flex;
+}
+.vs-d-flex-row {
+    flex-direction: row;
+}
+.vs-d-flex-row-reverse {
+    flex-direction: row-reverse;
+}
+.vs-d-flex-column {
+    flex-direction: column;
+}
+.vs-d-flex-column-reverse {
+    flex-direction: column-reverse;
+}
+.vs-f-justify-start {
+    justify-content: flex-start;
+}
+.vs-f-justify-center {
+    justify-content: center;
+}
+.vs-f-justify-end {
+    justify-content: flex-end;
+}
+.vs-f-justify-between {
+    justify-content: space-between;
+}
+.vs-f-justify-around {
+    justify-content: space-around;
+}
+.vs-f-justify-stretch {
+    justify-content: stretch;
+}
+.vs-f-align-start {
+    align-items: flex-start;
+}
+.vs-f-align-center {
+    align-items: center;
+}
+.vs-f-align-end {
+    align-items: flex-end;
+}
+.vs-f-align-stretch {
+    align-items: stretch;
+}
+
+
+/*Images*/
+.vs-images-list {
+    display: flex;
+}
+.vs-images-list--item {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.vs-images-list--item picture {
+    height: 100%;
+    width: 100%;
+}
+.vs-images-list--item img {
+    max-width: 100%;
+    max-height: 100%;
+}
+.vs-image-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.vs-image-contain {
+    object-fit: contain;
+}
