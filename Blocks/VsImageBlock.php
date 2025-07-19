@@ -6,7 +6,7 @@ use VSGutenberg\Classes\BaseElementBlock;
 
 if (!defined('ABSPATH')) exit;
 
-class VsImageSectionBlock extends BaseElementBlock {
+class VsImageBlock extends BaseElementBlock {
     public function __construct() {
         parent::__construct('vs_image_block', 'VS Image Block', 'format-image');
     }
@@ -184,4 +184,4 @@ class VsImageSectionBlock extends BaseElementBlock {
     }
 }
 
-new VsImageSectionBlock();
+new VsImageBlock();

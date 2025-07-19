@@ -53,10 +53,12 @@ add_action('after_setup_theme', function() {
 
 use VSGutenberg\Sections\VsSectionBlock;
 use VSGutenberg\Blocks\VsTextBlock;
-use VSGutenberg\Blocks\VsImageSectionBlock;
+use VSGutenberg\Blocks\VsImageBlock;
+use VSGutenberg\Blocks\VsAccordionBlock;
 
 add_action('acf/init', function() {
     (new VsSectionBlock())->init();
     (new VsTextBlock())->init();
-    (new VsImageSectionBlock())->init();
+    (new VsImageBlock())->init();
+    (new VsAccordionBlock())->init();
 });

@@ -43,13 +43,14 @@ abstract class BaseElementBlock {
     }
 
     protected function enqueue_assets() {
-        $plugin_url = plugins_url('../assets/css/', __FILE__);
+        $plugin_url = plugins_url('../assets/', __FILE__);
 
         if (is_admin()) {
-            wp_enqueue_style('vs-section-admin', $plugin_url . 'acf-gutenberg-style-admin.css', [], '1.0');
+            wp_enqueue_style('vs-section-admin', $plugin_url . 'css/acf-gutenberg-style-admin.css', [], '1.0');
         } else {
-            wp_enqueue_style('vs-section-front', $plugin_url . 'acf-gutenberg-style.css', [], '1.0');
+            wp_enqueue_style('vs-section-front', $plugin_url . 'css/acf-gutenberg-style.css', [], '1.0');
         }
+        wp_enqueue_script('vs-main', $plugin_url . 'js/vs-main.js', ['jquery'], false, true);
     }
 
     public function render_callback($block) {
@@ -57,21 +58,23 @@ abstract class BaseElementBlock {
         $block_id = uniqid('custom-block-');
         $styles = $this->generate_section_styles($fields, $block_id);
         $typography_styles = $this->generate_typography_styles($fields, $block_id);
-
-        $settings = $fields['element_settings'];
-        $visibility_classes = !empty($settings['visibility']) ? implode(' ', $settings['visibility']) : '';
         $classes = esc_attr($block_id);
-        if (!empty($settings['attributes']['class'])) {
-            $classes .= ' ' . $settings['attributes']['class'];
-        }
-        $classes .= ' ' . $visibility_classes;
         $id = '';
-        if (!empty($settings['attributes']['id'])) {
-            $id .= ' id="' . $settings['attributes']['id']. '"';
+
+        if (!empty($fields['element_settings'])) {
+            $settings = $fields['element_settings'];
+            $visibility_classes = !empty($settings['visibility']) ? implode(' ', $settings['visibility']) : '';
+            if (!empty($settings['attributes']['class'])) {
+                $classes .= ' ' . $settings['attributes']['class'];
+            }
+            $classes .= ' ' . $visibility_classes;
+            if (!empty($settings['attributes']['id'])) {
+                $id .= ' id="' . $settings['attributes']['id']. '"';
+            }
+            echo '<style>' . $styles . '</style>'; // Add styles to the page
+            echo '<style>' . $typography_styles . '</style>'; // Add styles to the page
         }
 
-        echo '<style>' . $styles . '</style>'; // Add styles to the page
-        echo '<style>' . $typography_styles . '</style>'; // Add styles to the page
         echo '<div class="' . $classes . '" '.$id.'>';
         $this->render_content($fields, $block_id);
         echo '</div>';

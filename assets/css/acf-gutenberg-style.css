@@ -148,3 +148,38 @@
 .vs-image-contain {
     object-fit: contain;
 }
+
+/*Accordion*/
+/*basic*/
+.vs-accordion_btn {
+    position: relative;
+}
+.vs-accordion_btn:before {
+    /*transition-duration: 0.2s;*/
+}
+.vs-accordion_btn:before {
+    content: '+';
+    right: 10px;
+    top: calc(50% - 15px);
+    width: 17px;
+    height: 31px;
+    position: absolute;
+    font-size: 31px;
+    line-height: 1;
+    cursor: pointer;
+}
+.vs-color-white .vs-accordion_btn:before {
+
+}
+.vs-accordion_btn.active:before {
+    content: '—';
+    font-size: 17px;
+    /* top: 28px; */
+    top: calc(50% - 11px);
+}
+.vs-accordion_panel {
+    /*padding: 0 18px;*/
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
