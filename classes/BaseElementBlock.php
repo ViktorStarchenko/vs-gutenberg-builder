@@ -4,7 +4,11 @@ namespace VSGutenberg\Classes;
 
 if (!defined('ABSPATH')) exit;
 
+use VSGutenberg\Classes\Traits\BlockStyleGenerator;
+
 abstract class BaseElementBlock {
+
+    use BlockStyleGenerator;
 
     protected $name;
     protected $title;
@@ -55,11 +59,13 @@ abstract class BaseElementBlock {
 
     public function render_callback($block) {
         $fields = get_fields();
-        $block_id = uniqid('custom-block-');
-        $styles = $this->generate_section_styles($fields, $block_id);
+        $block_id = uniqid('vs-custom-block-');
+//        $styles = $this->generate_section_styles($fields, $block_id);
         $typography_styles = $this->generate_typography_styles($fields, $block_id);
         $classes = esc_attr($block_id);
+        $classes .= ' vs-custom-block';
         $id = '';
+
 
         if (!empty($fields['element_settings'])) {
             $settings = $fields['element_settings'];
@@ -71,232 +77,35 @@ abstract class BaseElementBlock {
             if (!empty($settings['attributes']['id'])) {
                 $id .= ' id="' . $settings['attributes']['id']. '"';
             }
-            echo '<style>' . $styles . '</style>'; // Add styles to the page
+//            echo '<style>' . $styles . '</style>'; // Add styles to the page
             echo '<style>' . $typography_styles . '</style>'; // Add styles to the page
+
+            if (isset($settings['max_width']) && !empty($settings['max_width'])) {
+                $max_width_styles = $this->generate_max_width_styles($settings['max_width'], $block_id);
+                echo '<style>' . $max_width_styles . '</style>'; // Add styles
+            }
+            if (isset($settings['min_height']) && !empty($settings['min_height'])) {
+                $min_height_styles = $this->generate_min_height_styles($settings['min_height'], $block_id);
+                echo '<style>' . $min_height_styles . '</style>'; // Add styles
+            }
+            if (isset($settings['padding']) && !empty($settings['padding'])) {
+                $padding_styles = $this->generate_padding_styles($settings['padding'], $block_id);
+                echo '<style>' . $padding_styles . '</style>'; // Add styles
+            }
+            if (isset($settings['margin']) && !empty($settings['margin'])) {
+                $margin_styles = $this->generate_margin_styles($settings['margin'], $block_id);
+                echo '<style>' . $margin_styles . '</style>'; // Add styles
+            }
+            if (isset($settings['background']) && !empty($settings['background'])) {
+                $background_styles = $this->generate_background_styles($settings['background'], $block_id);
+                echo '<style>' . $background_styles . '</style>'; // Add styles
+            }
+
         }
 
         echo '<div class="' . $classes . '" '.$id.'>';
         $this->render_content($fields, $block_id);
         echo '</div>';
-    }
-
-    protected function generate_section_styles($fields, $block_id) {
-        $styles = [];
-
-        if (!empty($fields['element_settings'])) {
-            $settings = $fields['element_settings'];
-            $general = $settings['general'];
-
-
-            $bg_image = $settings['background']['image'];
-
-            $gradient_direction = 'to right';
-            if ($settings['background']['gradient_direction']) {
-                $gradient_direction = $settings['background']['gradient_direction'];
-            }
-
-            $bg_color = '';
-            $bg_color_gradient = '';
-            if ($settings['background']['background_color']) {
-                $gradient_array = [];
-                foreach ($settings['background']['background_color'] as $color) {
-                    $gradient_array[] = $color['color'];
-                }
-                $gradient_string = implode(', ', $gradient_array);
-                $bg_color = $gradient_array[0] .';';
-                $bg_color_gradient = 'linear-gradient(' . $gradient_direction . ',' . $gradient_string . ')';
-            }
-
-            $styles[] = $this->get_css_rule($block_id, 'background-color',$bg_color);
-            $styles[] = $this->get_css_rule($block_id, 'background',$bg_color_gradient);
-
-
-            if (!empty($settings['max_width'])) {
-                if (!empty($settings['max_width']['desktop'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'max-width', $settings['max_width']['desktop']);
-                }
-                if (!empty($settings['max_width']['tablet'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'max-width', $settings['max_width']['tablet']) . " }";
-                }
-                if (!empty($settings['max_width']['mobile'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'max-width', $settings['max_width']['mobile']) . " }";
-                }
-            }
-
-            // Min Height
-            if (!empty($settings['min_height'])) {
-                if (!empty($settings['min_height']['desktop'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'min-height', $settings['min_height']['desktop']);
-                }
-            }
-            if (!empty($settings['min_height'])) {
-                if (!empty($settings['min_height']['tablet'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'min-height', $settings['min_height']['tablet']) . " }";
-                }
-            }
-            if (!empty($settings['min_height'])) {
-                if (!empty($settings['min_height']['mobile'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'min-height', $settings['min_height']['mobile']) . " }";
-                }
-            }
-
-            //Background
-            if (!empty($bg_image['desktop'])) {
-                $styles[] = $this->get_css_rule($block_id, 'background-image','url('.$bg_image['desktop']['url'].')');
-            }
-            if (!empty($bg_image['tablet'])) {
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'background-image', 'url('.$bg_image['tablet']['url'].')') . " }";
-            }
-            if (!empty($bg_image['mobile'])) {
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'background-image', 'url('.$bg_image['mobile']['url'].')') . " }";
-            }
-
-
-            //General
-            if (!empty($general['desktop'])) {
-                //margin
-                if (!empty($general['desktop']['margin-top'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'margin-top', $general['desktop']['margin-top']);
-                }
-                if (!empty($general['desktop']['margin-bottom'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'margin-bottom', $general['desktop']['margin-bottom']);
-                }
-                if (!empty($general['desktop']['margin-left'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'margin-left', $general['desktop']['margin-left']);
-                }
-                if (!empty($general['desktop']['margin-right'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'margin-right', $general['desktop']['margin-right']);
-                }
-                //padding
-                if (!empty($general['desktop']['padding-top'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'padding-top', $general['desktop']['padding-top']);
-                }
-                if (!empty($general['desktop']['padding-bottom'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'padding-bottom', $general['desktop']['padding-bottom']);
-                }
-                if (!empty($general['desktop']['padding-left'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'padding-left', $general['desktop']['padding-left']);
-                }
-                if (!empty($general['desktop']['padding-right'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'padding-right', $general['desktop']['padding-right']);
-                }
-            }
-
-
-            if (!empty($general['tablet'])) {
-                //margin
-                if (!empty($general['tablet']['margin-top'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-top', $general['tablet']['margin-top']) . " }";
-                }
-                if (!empty($general['tablet']['margin-bottom'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-bottom', $general['tablet']['margin-bottom']) . " }";
-                }
-                if (!empty($general['tablet']['margin-left'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-left', $general['tablet']['margin-left']) . " }";
-                }
-                if (!empty($general['tablet']['margin-right'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-right', $general['tablet']['margin-right']) . " }";
-                }
-                //padding
-                if (!empty($general['tablet']['padding-top'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-top', $general['tablet']['padding-top']) . " }";
-                }
-                if (!empty($general['tablet']['padding-bottom'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-bottom', $general['tablet']['padding-bottom']) . " }";
-                }
-                if (!empty($general['tablet']['padding-left'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-left', $general['tablet']['padding-left']) . " }";
-                }
-                if (!empty($general['tablet']['padding-right'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-right', $general['tablet']['padding-right']) . " }";
-                }
-            }
-
-
-            if (!empty($general['mobile'])) {
-                //margin
-                if (!empty($general['mobile']['margin-top'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-top', $general['mobile']['margin-top']) . " }";
-                }
-                if (!empty($general['mobile']['margin-bottom'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-bottom', $general['mobile']['margin-bottom']) . " }";
-                }
-                if (!empty($general['mobile']['margin-left'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-left', $general['mobile']['margin-left']) . " }";
-                }
-                if (!empty($general['mobile']['margin-right'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-right', $general['mobile']['margin-right']) . " }";
-                }
-                //padding
-                if (!empty($general['mobile']['padding-top'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-top', $general['mobile']['padding-top']) . " }";
-                }
-                if (!empty($general['mobile']['padding-bottom'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-bottom', $general['mobile']['padding-bottom']) . " }";
-                }
-                if (!empty($general['mobile']['padding-left'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-left', $general['mobile']['padding-left']) . " }";
-                }
-                if (!empty($general['mobile']['padding-right'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-right', $general['mobile']['padding-right']) . " }";
-                }
-            }
-
-        }
-
-        return implode(' ', array_filter($styles)); // Видаляємо порожні значення
-    }
-
-    protected function generate_typography_styles($fields, $block_id) {
-        $styles = [];
-
-        if (!empty($fields['typography'])) {
-            $typography = $fields['typography'];
-
-            //Text Color
-            if (!empty($typography['font_color'])) {
-                $styles[] = $this->get_css_rule($block_id, 'color', $typography['font_color']);
-            }
-
-            //Font Size
-            if (!empty($typography['font_size'])) {
-                if (!empty($typography['font_size']['desktop'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'font-size', $typography['font_size']['desktop']);
-                }
-                if (!empty($typography['font_size']['tablet'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'font-size', $typography['font_size']['tablet']) . " }";
-                }
-                if (!empty($typography['font_size']['mobile'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'font-size', $typography['font_size']['mobile']) . " }";
-                }
-            }
-            //Line Height
-            if (!empty($typography['line_height'])) {
-                if (!empty($typography['line_height']['desktop'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'line-height', $typography['line_height']['desktop']);
-                }
-                if (!empty($typography['line_height']['tablet'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'line-height', $typography['line_height']['tablet']) . " }";
-                }
-                if (!empty($typography['line_height']['mobile'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'line-height', $typography['line_height']['mobile']) . " }";
-                }
-            }
-            //Font Weight
-            if (!empty($typography['font_weight'])) {
-                if (!empty($typography['font_weight']['desktop'])) {
-                    $styles[] = $this->get_css_rule($block_id, 'font-weight', $typography['font_weight']['desktop']);
-                }
-                if (!empty($typography['font_weight']['tablet'])) {
-                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'font-weight', $typography['font_weight']['tablet']) . " }";
-                }
-                if (!empty($typography['font_weight']['mobile'])) {
-                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'font-weight', $typography['font_weight']['mobile']) . " }";
-                }
-            }
-        }
-
-        return implode(' ', array_filter($styles));
     }
 
     protected function get_css_rule($block_id, $property, $value) {

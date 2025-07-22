@@ -6,6 +6,8 @@
  * Author: Djigan
  */
 
+if (!defined('ABSPATH')) exit;
+
 // Автозавантаження класів
 spl_autoload_register(function ($class) {
     $prefix = 'VSGutenberg\\';
@@ -24,6 +26,10 @@ spl_autoload_register(function ($class) {
     }
 });
 
+if (file_exists(plugin_dir_path(__FILE__) . 'Helpers/Functions.php')) {
+    require_once plugin_dir_path(__FILE__) . 'Helpers/Functions.php';
+}
+
 // Завантажуємо ACF JSON для автоматичного sync
 add_filter('acf/settings/load_json', function ($paths) {
     $paths[] = plugin_dir_path(__FILE__) . 'acf-json';
@@ -32,16 +38,11 @@ add_filter('acf/settings/load_json', function ($paths) {
 
 // Ініціалізація блоків
 add_action('acf/init', function() {
-    // Ініціалізація базових блоків
-    if (class_exists('VSGutenberg\\Blocks\\VsTextBlock')) {
-        new VSGutenberg\Blocks\VsTextBlock();
+
+    if (file_exists(plugin_dir_path(__FILE__) . 'acf-rules/acf-rules-main.php')) {
+        require plugin_dir_path(__FILE__) . 'acf-rules/acf-rules-main.php';
     }
 
-    if (class_exists('VSGutenberg\\Blocks\\AccordionBlock')) {
-//        new VSGutenberg\Blocks\AccordionBlock();
-    }
-
-    // Додаткові блоки або секції можна реєструвати тут або в темі
 });
 
 // Дозволити розширення в темі
@@ -55,10 +56,16 @@ use VSGutenberg\Sections\VsSectionBlock;
 use VSGutenberg\Blocks\VsTextBlock;
 use VSGutenberg\Blocks\VsImageBlock;
 use VSGutenberg\Blocks\VsAccordionBlock;
+use VSGutenberg\Blocks\VsButtonBlock;
 
 add_action('acf/init', function() {
     (new VsSectionBlock())->init();
     (new VsTextBlock())->init();
     (new VsImageBlock())->init();
     (new VsAccordionBlock())->init();
+    (new VsButtonBlock())->init();
+
+    if (file_exists(plugin_dir_path(__FILE__) . 'acf-rules/acf-rules-main.php')) {
+        require plugin_dir_path(__FILE__) . 'acf-rules/acf-rules-main.php';
+    }
 });

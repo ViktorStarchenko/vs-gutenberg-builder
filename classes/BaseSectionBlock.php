@@ -4,7 +4,11 @@ namespace VSGutenberg\Classes;
 
 if (!defined('ABSPATH')) exit;
 
+use VSGutenberg\Classes\Traits\BlockStyleGenerator;
+
 abstract class BaseSectionBlock {
+
+    use BlockStyleGenerator;
 
     protected $name;
     protected $title;
@@ -51,11 +55,41 @@ abstract class BaseSectionBlock {
 
     public function render_callback($block) {
         $fields = get_fields();
+        $settings = $fields['section_settings'];
         $block_id = uniqid('vs-section-');
         $content_id = uniqid('vs-section-content-');
 
-        echo '<style>' . $this->generate_section_styles($fields, $block_id) . '</style>';
-        echo '<style>' . $this->generate_content_styles($fields, $content_id) . '</style>';
+        if (isset($settings['min_height']) && !empty($settings['min_height'])) {
+            $min_height_styles = $this->generate_min_height_styles($settings['min_height'], $block_id);
+            echo '<style>' . $min_height_styles . '</style>'; // Add styles
+        }
+
+        if (isset($settings['wrappers']['section_wrapper']) && !empty($settings['wrappers']['section_wrapper'])) {
+            $section_wrapper_styles = $this->generate_wrapper_styles($settings['wrappers']['section_wrapper'], $block_id);
+            echo '<style>' . $section_wrapper_styles . '</style>'; // Add styles
+        }
+
+        if (isset($settings['wrappers']['content_wrapper']) && !empty($settings['wrappers']['content_wrapper'])) {
+            $content_wrapper_styles = $this->generate_wrapper_styles($settings['wrappers']['content_wrapper'], $content_id);
+            echo '<style>' . $content_wrapper_styles . '</style>'; // Add styles
+        }
+
+        if (isset($settings['padding']) && !empty($settings['padding'])) {
+            $padding_styles = $this->generate_padding_styles($settings['padding'], $block_id);
+            echo '<style>' . $padding_styles . '</style>'; // Add styles
+        }
+
+        if (isset($settings['margin']) && !empty($settings['margin'])) {
+            $margin_styles = $this->generate_margin_styles($settings['margin'], $block_id);
+            echo '<style>' . $margin_styles . '</style>'; // Add styles
+        }
+
+        if (isset($settings['background']) && !empty($settings['background'])) {
+            $background_styles = $this->generate_background_styles($settings['background'], $block_id);
+            echo '<style>' . $background_styles . '</style>'; // Add styles
+        }
+
+//        echo '<style>' . $this->generate_section_styles($fields, $block_id) . '</style>';
         echo $this->generate_section_wrapper($fields, $block_id, $content_id);
     }
 
@@ -71,8 +105,8 @@ abstract class BaseSectionBlock {
             $classes .= ' ' . implode(' ', $settings['visibility']);
         }
 
-        if (!empty($settings['section_classes'])) {
-            $classes .= ' ' . esc_attr($settings['section_classes']);
+        if (!empty($settings['attributes']['class'])) {
+            $classes .= ' ' . esc_attr($settings['attributes']['class']);
         }
 
         ob_start();
@@ -94,132 +128,6 @@ abstract class BaseSectionBlock {
         </section>
         <?php
         return ob_get_clean();
-    }
-
-    protected function generate_section_styles($fields, $block_id) {
-        $styles = [];
-
-        if (!empty($fields['section_settings'])) {
-            $settings = $fields['section_settings'];
-            $bg_image = $settings['background']['image'];
-            $spacing = $settings['spacing'];
-
-            $gradient_direction = 'to right';
-            if ($settings['background']['gradient_direction']) {
-                $gradient_direction = $settings['background']['gradient_direction'];
-            }
-
-            $bg_color = '';
-            $bg_color_gradient = '';
-            if ($settings['background']['background_color']) {
-                $gradient_array = [];
-                foreach ($settings['background']['background_color'] as $color) {
-                    $gradient_array[] = $color['color'];
-                }
-                $gradient_string = implode(', ', $gradient_array);
-                $bg_color = $gradient_array[0] .';';
-                $bg_color_gradient = 'linear-gradient(' . $gradient_direction . ',' . $gradient_string . ')';
-            }
-
-            $styles[] = $this->get_css_rule($block_id, 'background-color',$bg_color);
-            $styles[] = $this->get_css_rule($block_id, 'background',$bg_color_gradient);
-
-            // Desktop
-            if (!empty($settings['wrappers']['section_wrapper']['max_width']) && !empty($settings['wrappers']['section_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($block_id, 'max-width','calc(' . $settings['wrappers']['section_wrapper']['max_width']. ' + ' . $settings['wrappers']['section_wrapper']['padding'] . ' + ' . $settings['wrappers']['section_wrapper']['padding'] .')');
-            } else if (!empty($settings['wrappers']['section_wrapper']['max_width']) && empty($settings['wrappers']['section_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($block_id, 'max-width', $settings['wrappers']['section_wrapper']['max_width']);
-            }
-            if (!empty($settings['wrappers']['section_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($block_id, 'padding-left',$settings['wrappers']['section_wrapper']['padding']);
-                $styles[] = $this->get_css_rule($block_id, 'padding-right',$settings['wrappers']['section_wrapper']['padding']);
-            }
-
-            if (!empty($bg_image['desktop'])) {
-                $styles[] = $this->get_css_rule($block_id, 'background-image','url('.$bg_image['desktop']['url'].')');
-            }
-
-            if (!empty($spacing['height']['desktop'])) {
-                $styles[] = $this->get_css_rule($block_id, 'min-height',$settings['spacing']['height']['desktop']);
-            }
-//
-            if (!empty($spacing['padding']['desktop'])) {
-                $styles[] = $this->get_css_rule($block_id, 'padding-top', $spacing['padding']['desktop']['top']);
-                $styles[] = $this->get_css_rule($block_id, 'padding-bottom', $spacing['padding']['desktop']['bottom']);
-            }
-
-            if (!empty($spacing['margin']['desktop'])) {
-                $styles[] = $this->get_css_rule($block_id, 'margin-top', $spacing['margin']['desktop']['top']);
-                $styles[] = $this->get_css_rule($block_id, 'margin-bottom', $spacing['margin']['desktop']['bottom']);
-            }
-
-
-            // Tablet
-            if (!empty($bg_image['tablet'])) {
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'background-image', 'url('.$bg_image['tablet']['url'].')') . " }";
-            }
-
-            if (!empty($spacing['height']['tablet'])) {
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'min-height', $settings['spacing']['height']['tablet']) . " }";
-            }
-
-            if (!empty($spacing['padding']['tablet'])) {
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-top', $spacing['padding']['tablet']['top']) . " }";
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'padding-bottom', $spacing['padding']['tablet']['bottom']) . " }";
-            }
-
-            if (!empty($spacing['margin']['tablet'])) {
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-top', $spacing['margin']['tablet']['top']) . " }";
-                $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id, 'margin-bottom', $spacing['margin']['tablet']['bottom']) . " }";
-            }
-
-            // Mobile
-            if (!empty($bg_image['mobile'])) {
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'background-image', 'url('.$bg_image['mobile']['url'].')') . " }";
-            }
-
-            if (!empty($spacing['height']['mobile'])) {
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'min-height', $settings['spacing']['height']['mobile']) . " }";
-            }
-
-            if (!empty($spacing['padding']['mobile'])) {
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-top', $spacing['padding']['mobile']['top']) . " }";
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'padding-bottom', $spacing['padding']['mobile']['bottom']) . " }";
-            }
-
-            if (!empty($spacing['margin']['mobile'])) {
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-top', $spacing['margin']['mobile']['top']) . " }";
-                $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id, 'margin-bottom', $spacing['margin']['mobile']['bottom']) . " }";
-            }
-
-        }
-
-        return implode(' ', array_filter($styles)); // Видаляємо порожні значення
-    }
-
-    protected function generate_content_styles($fields, $content_id) {
-        $styles = [];
-
-        if (!empty($fields['section_settings'])) {
-            $settings = $fields['section_settings'];
-
-            $section_wrapper = $settings['wrappers']['section_wrapper'];
-
-            // Desktop
-            if (!empty($settings['wrappers']['content_wrapper']['max_width']) && !empty($settings['wrappers']['content_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($content_id, 'max-width','calc(' . $settings['wrappers']['content_wrapper']['max_width']. ' + ' . $settings['wrappers']['content_wrapper']['padding'] . ' + ' . $settings['wrappers']['content_wrapper']['padding'] .')');
-            } else if (!empty($settings['wrappers']['content_wrapper']['max_width']) && empty($settings['wrappers']['content_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($content_id, 'max-width', $settings['wrappers']['content_wrapper']['max_width']);
-            }
-
-            if (!empty($settings['wrappers']['content_wrapper']['padding'])) {
-                $styles[] = $this->get_css_rule($content_id, 'padding-left',$settings['wrappers']['content_wrapper']['padding']);
-                $styles[] = $this->get_css_rule($content_id, 'padding-right',$settings['wrappers']['content_wrapper']['padding']);
-            }
-
-        }
-
-        return implode(' ', array_filter($styles));
     }
 
     // Ці методи мають бути реалізовані в дочірніх класах або мати дефолтну реалізацію

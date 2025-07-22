@@ -1,3 +1,9 @@
+/*Custom block*/
+.vs-custom-block {
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+}
 .vs-wrapper {
     margin-left: auto;
     margin-right: auto;
@@ -149,6 +155,7 @@
     position: absolute;
     font-size: 31px;
     line-height: 1;
+    cursor: pointer;
 }
 .vs-color-white .vs-accordion_btn:before {
 
@@ -164,4 +171,29 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+}
+
+/*Buttons*/
+.vs-button {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 8px 20px;
+    text-decoration: none;
+    transition: all .3s;
+}
+.vs-btn-icon {
+    width: auto;
+    max-height: 18px;
+    object-fit: contain;
+}
+.vs-btn-icon.icon-left {
+    order: -1;
+}
+
+/*Text Block*/
+.vs-custom-text-block {
+    /*height: 100%;*/
 }

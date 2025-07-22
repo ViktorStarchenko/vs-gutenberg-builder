@@ -6,9 +6,10 @@ use VSGutenberg\Classes\BaseElementBlock;
 
 if (!defined('ABSPATH')) exit;
 
+
 class VsTextBlock extends BaseElementBlock {
     public function __construct() {
-        parent::__construct('vs_text_block', 'VS Text Block', 'editor-text');
+        parent::__construct('vs-text-block', 'VS Text Block', 'editor-text');
     }
 
     protected function generate_text_block_styles($fields, $block_id) {
@@ -52,6 +53,17 @@ class VsTextBlock extends BaseElementBlock {
         $text = $fields['text_block_settings']['text'] ?? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, quisquam?';
         $classes = 'vs-custom-text-block vs-d-flex vs-d-flex-column';
         $classes .= ' ' . $content__uniq_class;
+
+        if (isset($fields['text_block_settings']['typography']) && !empty($fields['text_block_settings']['typography'])) {
+            $typography_styles = $this->generate_typography_styles($fields['text_block_settings']['typography'], $content__uniq_class);
+            echo '<style>' . $typography_styles . '</style>'; // Add styles
+        }
+
+        if (isset($fields['text_block_settings']['flex_alignment']) && !empty($fields['text_block_settings']['flex_alignment'])) {
+            $alignment_styles = $this->generate_flex_alignment_styles($fields['text_block_settings']['flex_alignment'], $content__uniq_class);
+            echo '<style>' . $alignment_styles . '</style>'; // Add styles
+        }
+
         $text_styles = $this->generate_text_block_styles($fields, $content__uniq_class);
         echo '<style>' . $text_styles . '</style>'; // Add styles
         ob_start();
