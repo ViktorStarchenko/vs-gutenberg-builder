@@ -7,11 +7,20 @@ $content_wrapper = get_wrappers_rules('Content Wrapper');
 require_once plugin_dir_path(__FILE__) . 'rules/padding.php';
 $padding = get_padding_rules('Padding');
 
-$min_height = include plugin_dir_path(__FILE__) . 'rules/max-height.php';
-$margin = include plugin_dir_path(__FILE__) . 'rules/margin.php';
-$background_full = include plugin_dir_path(__FILE__) . 'rules/background-full.php';
-$attributes = include plugin_dir_path(__FILE__) . 'rules/attributes.php';
-$visibility = include plugin_dir_path(__FILE__) . 'rules/visibility.php';
+require_once plugin_dir_path(__FILE__) . 'rules/margin.php';
+$margin = get_margin_rules('Margin');
+
+require_once plugin_dir_path(__FILE__) . 'rules/min-height.php';
+$min_height = get_min_height_rules();
+
+require_once plugin_dir_path(__FILE__) . 'rules/background-full.php';
+$background_full = get_background_full_rules('Section Background');
+
+require_once plugin_dir_path(__FILE__) . 'rules/attributes.php';
+$attributes = get_attributes_rules('Attributes');
+
+require_once plugin_dir_path(__FILE__) . 'rules/visibility.php';
+$visibility = get_visibility_rules();
 
 if ( ! function_exists( 'acf_add_local_field_group' ) ) {
     return;

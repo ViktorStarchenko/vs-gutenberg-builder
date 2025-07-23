@@ -2,7 +2,7 @@
 
 use function VSGutenberg\Helpers\simple_slug;
 
-function get_bg_color_rules($group_name = 'background') {
+function get_bg_color_rules($group_name = 'Background') {
 
     $group_label = $group_name;
     $group_slug = simple_slug($group_name);

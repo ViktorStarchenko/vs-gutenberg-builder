@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: VS Gutenberg Builder
- * Description: Універсальний набір ACF Gutenberg блоків з автозавантаженням і підтримкою кастомізації в темі.
+ * Description: A universal set of ACF Gutenberg blocks with auto-links and enhanced customization in the theme.
  * Version: 1.0
- * Author: Djigan
+ * Author: Viktor Starchenko
  */
 
 if (!defined('ABSPATH')) exit;
 
-// Автозавантаження класів
+// Autoloading classes
 spl_autoload_register(function ($class) {
     $prefix = 'VSGutenberg\\';
     $base_dir = plugin_dir_path(__FILE__);
@@ -30,13 +30,13 @@ if (file_exists(plugin_dir_path(__FILE__) . 'Helpers/Functions.php')) {
     require_once plugin_dir_path(__FILE__) . 'Helpers/Functions.php';
 }
 
-// Завантажуємо ACF JSON для автоматичного sync
+// Download ACF JSON for automatic sync
 add_filter('acf/settings/load_json', function ($paths) {
     $paths[] = plugin_dir_path(__FILE__) . 'acf-json';
     return $paths;
 });
 
-// Ініціалізація блоків
+// ACF block initialization
 add_action('acf/init', function() {
 
     if (file_exists(plugin_dir_path(__FILE__) . 'acf-rules/acf-rules-main.php')) {
@@ -45,7 +45,7 @@ add_action('acf/init', function() {
 
 });
 
-// Дозволити розширення в темі
+// Allow extensions in the theme
 add_action('after_setup_theme', function() {
     if (file_exists(get_stylesheet_directory() . '/vs-gutenberg-builder-overrides/init.php')) {
         require get_stylesheet_directory() . '/vs-gutenberg-builder-overrides/init.php';

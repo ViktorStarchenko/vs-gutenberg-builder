@@ -1,13 +1,25 @@
 <?php
 
-$max_width = include plugin_dir_path(__FILE__) . 'rules/max-width.php';
-$min_height = include plugin_dir_path(__FILE__) . 'rules/max-height.php';
+require_once plugin_dir_path(__FILE__) . 'rules/max-width.php';
+$max_width = get_max_width_rules();
+
+require_once plugin_dir_path(__FILE__) . 'rules/min-height.php';
+$min_height = get_min_height_rules();
+
 require_once plugin_dir_path(__FILE__) . 'rules/padding.php';
 $padding = get_padding_rules('Padding');
-$margin = include plugin_dir_path(__FILE__) . 'rules/margin.php';
-$attributes = include plugin_dir_path(__FILE__) . 'rules/attributes.php';
-$background_full = include plugin_dir_path(__FILE__) . 'rules/background-full.php';
-$visibility = include plugin_dir_path(__FILE__) . 'rules/visibility.php';
+
+require_once plugin_dir_path(__FILE__) . 'rules/margin.php';
+$margin = get_margin_rules('Margin');
+
+require_once plugin_dir_path(__FILE__) . 'rules/attributes.php';
+$attributes = get_attributes_rules('Attributes');
+
+require_once plugin_dir_path(__FILE__) . 'rules/background-full.php';
+$background_full = get_background_full_rules('Element Background');
+
+require_once plugin_dir_path(__FILE__) . 'rules/visibility.php';
+$visibility = get_visibility_rules();
 
 if (!function_exists('acf_add_local_field_group')) {
     return;

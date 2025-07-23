@@ -2,7 +2,7 @@
 
 use function VSGutenberg\Helpers\simple_slug;
 
-function get_attributes_rules($group_name = 'Attributes') {
+function get_min_height_rules($group_name = 'Min Height') {
 
     $group_label = $group_name;
     $group_slug = simple_slug($group_name);
@@ -21,12 +21,12 @@ function get_attributes_rules($group_name = 'Attributes') {
             'class' => '',
             'id' => '',
         ),
-        'layout' => 'block',
+        'layout' => 'table',
         'sub_fields' => array(
             array(
-                'key' => 'field_6878a8851ea8d',
-                'label' => 'Class',
-                'name' => 'class',
+                'key' => 'field_6878dc1198b62',
+                'label' => 'Desktop',
+                'name' => 'desktop',
                 'aria-label' => '',
                 'type' => 'text',
                 'instructions' => '',
@@ -44,9 +44,29 @@ function get_attributes_rules($group_name = 'Attributes') {
                 'maxlength' => '',
             ),
             array(
-                'key' => 'field_6878a88a1ea8e',
-                'label' => 'Id',
-                'name' => 'id',
+                'key' => 'field_6878dc1198b63',
+                'label' => 'Tablet',
+                'name' => 'tablet',
+                'aria-label' => '',
+                'type' => 'text',
+                'instructions' => '',
+                'required' => 0,
+                'conditional_logic' => 0,
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id' => '',
+                ),
+                'default_value' => '',
+                'placeholder' => '',
+                'prepend' => '',
+                'append' => '',
+                'maxlength' => '',
+            ),
+            array(
+                'key' => 'field_6878dc1198b64',
+                'label' => 'Mobile',
+                'name' => 'mobile',
                 'aria-label' => '',
                 'type' => 'text',
                 'instructions' => '',

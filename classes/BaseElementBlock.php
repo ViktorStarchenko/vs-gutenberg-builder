@@ -96,8 +96,8 @@ abstract class BaseElementBlock {
                 $margin_styles = $this->generate_margin_styles($settings['margin'], $block_id);
                 echo '<style>' . $margin_styles . '</style>'; // Add styles
             }
-            if (isset($settings['background']) && !empty($settings['background'])) {
-                $background_styles = $this->generate_background_styles($settings['background'], $block_id);
+            if (isset($settings['element_background']) && !empty($settings['element_background'])) {
+                $background_styles = $this->generate_background_styles($settings['element_background'], $block_id);
                 echo '<style>' . $background_styles . '</style>'; // Add styles
             }
 

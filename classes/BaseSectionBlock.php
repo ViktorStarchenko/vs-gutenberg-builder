@@ -84,8 +84,8 @@ abstract class BaseSectionBlock {
             echo '<style>' . $margin_styles . '</style>'; // Add styles
         }
 
-        if (isset($settings['background']) && !empty($settings['background'])) {
-            $background_styles = $this->generate_background_styles($settings['background'], $block_id);
+        if (isset($settings['section_background']) && !empty($settings['section_background'])) {
+            $background_styles = $this->generate_background_styles($settings['section_background'], $block_id);
             echo '<style>' . $background_styles . '</style>'; // Add styles
         }
 
@@ -112,15 +112,15 @@ abstract class BaseSectionBlock {
         ob_start();
         ?>
         <section class="vs-section vs-wrapper <?= $classes; ?>" id="<?= esc_attr($settings['attributes']['id'] ?? '') ?>">
-            <?php if (!empty($settings['background']['video']['url'])) : ?>
+            <?php if (!empty($settings['section_background']['video']['url'])) : ?>
                 <div class="vs-background__video-wrapper">
-                    <video playsinline autoplay muted loop poster="<?= esc_url($settings['background']['video']['url']); ?>#t=2">
-                        <source src="<?= esc_url($settings['background']['video']['url']); ?>" type="video/mp4">
+                    <video playsinline autoplay muted loop poster="<?= esc_url($settings['section_background']['video']['url']); ?>#t=2">
+                        <source src="<?= esc_url($settings['section_background']['video']['url']); ?>" type="video/mp4">
                     </video>
                 </div>
             <?php endif; ?>
 
-            <div class="vs-bg-overlay <?= !empty($settings['background']['enable_overlay']) ? 'active' : ''; ?>"></div>
+            <div class="vs-bg-overlay <?= !empty($settings['section_background']['enable_overlay']) ? 'active' : ''; ?>"></div>
 
             <div class="vs-wrapper content vs-content-wrapper <?= esc_attr($settings['wrappers']['content_wrapper']['preset'] ?? ''); ?> <?= esc_attr($content_id); ?>">
                 <?php $this->render_content($fields); ?>
@@ -130,6 +130,6 @@ abstract class BaseSectionBlock {
         return ob_get_clean();
     }
 
-    // Ці методи мають бути реалізовані в дочірніх класах або мати дефолтну реалізацію
+    // These methods must be implemented in child classes or have a default implementation.
     abstract protected function render_content($fields);
 }

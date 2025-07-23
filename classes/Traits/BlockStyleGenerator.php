@@ -259,52 +259,6 @@ trait BlockStyleGenerator
             }
         }
 
-//        if (!empty($fields['typography_hover'])) {
-//            $typography_hover = $fields['typography_hover'];
-//
-//            //Text Color
-//            if (!empty($typography_hover['font_color'])) {
-//                $styles[] = $this->get_css_rule($block_id . ':hover', 'color', $typography_hover['font_color']);
-//            }
-//
-//            //Font Size
-//            if (!empty($typography_hover['font_size'])) {
-//                if (!empty($typography_hover['font_size']['desktop'])) {
-//                    $styles[] = $this->get_css_rule($block_id . ':hover', 'font-size', $typography_hover['font_size']['desktop']);
-//                }
-//                if (!empty($typography_hover['font_size']['tablet'])) {
-//                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id . ':hover', 'font-size', $typography_hover['font_size']['tablet']) . " }";
-//                }
-//                if (!empty($typography_hover['font_size']['mobile'])) {
-//                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id . ':hover', 'font-size', $typography_hover['font_size']['mobile']) . " }";
-//                }
-//            }
-//            //Line Height
-//            if (!empty($typography_hover['line_height'])) {
-//                if (!empty($typography_hover['line_height']['desktop'])) {
-//                    $styles[] = $this->get_css_rule($block_id . ':hover', 'line-height', $typography_hover['line_height']['desktop']);
-//                }
-//                if (!empty($typography_hover['line_height']['tablet'])) {
-//                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id . ':hover', 'line-height', $typography_hover['line_height']['tablet']) . " }";
-//                }
-//                if (!empty($typography_hover['line_height']['mobile'])) {
-//                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id . ':hover', 'line-height', $typography_hover['line_height']['mobile']) . " }";
-//                }
-//            }
-//            //Font Weight
-//            if (!empty($typography_hover['font_weight'])) {
-//                if (!empty($typography_hover['font_weight']['desktop'])) {
-//                    $styles[] = $this->get_css_rule($block_id . ':hover', 'font-weight', $typography_hover['font_weight']['desktop']);
-//                }
-//                if (!empty($typography_hover['font_weight']['tablet'])) {
-//                    $styles[] = "@media (max-width: 992px) { " . $this->get_css_rule($block_id . ':hover', 'font-weight', $typography_hover['font_weight']['tablet']) . " }";
-//                }
-//                if (!empty($typography_hover['font_weight']['mobile'])) {
-//                    $styles[] = "@media (max-width: 767px) { " . $this->get_css_rule($block_id . ':hover', 'font-weight', $typography_hover['font_weight']['mobile']) . " }";
-//                }
-//            }
-//        }
-
         return implode(' ', array_filter($styles));
     }
 
