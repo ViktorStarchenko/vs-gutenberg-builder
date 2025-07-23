@@ -161,6 +161,13 @@ acf_add_local_field_group(array(
                 'value' => 'acf/vs-accordion-block',
             ),
         ),
+        array(
+            array(
+                'param' => 'block',
+                'operator' => '==',
+                'value' => 'acf/vs-button-block',
+            ),
+        ),
     ),
     'menu_order' => 0,
     'position' => 'normal',

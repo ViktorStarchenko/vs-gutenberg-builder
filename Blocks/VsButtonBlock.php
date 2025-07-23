@@ -124,14 +124,25 @@ class VsButtonBlock extends BaseElementBlock {
                         echo '<style>' . $background_hover_styles . '</style>'; // Add styles
                     }
 
-                    if (!empty($item['link'])) { ?>
-                        <a class="<?=$vs_button_casses;?>" href="<?= $item['link']['url'];?>" target="<?= $item['link']['target'];?>">
-                            <span class="vs-btn-inner"><?= $item['link']['title'];?></span>
-                            <?php if (isset($item['icon']['image']) && !empty($item['icon']['image'])) { ?>
-                                <img class="vs-btn-icon <?= !empty($item['icon']['position']) ? ' ' . $item['icon']['position'] : ''; ?>" src="<?= $item['icon']['image']['url'];?>" alt="<?= $item['icon']['image']['title'];?>">
-                            <?php } ?>
-                        </a>
-                    <?php } ?>
+                    if ($item['type'] == 'link') {
+                        if (!empty($item['link'])) { ?>
+                            <a class="<?=$vs_button_casses;?>" href="<?= $item['link']['url'];?>" target="<?= $item['link']['target'];?>">
+                                <span class="vs-btn-inner"><?= $item['link']['title'];?></span>
+                                <?php if (isset($item['icon']['image']) && !empty($item['icon']['image'])) { ?>
+                                    <img class="vs-btn-icon <?= !empty($item['icon']['position']) ? ' ' . $item['icon']['position'] : ''; ?>" src="<?= $item['icon']['image']['url'];?>" alt="<?= $item['icon']['image']['title'];?>">
+                                <?php } ?>
+                            </a>
+                        <?php }
+                    } else if ($item['type'] == 'file') {
+                        if (!empty($item['file'])) { ?>
+                            <a download class="<?=$vs_button_casses;?>" href="<?= $item['file']['url'];?>" target="<?= $item['link']['target'];?>">
+                                <span class="vs-btn-inner"><?= $item['file_text'];?></span>
+                                <?php if (isset($item['icon']['image']) && !empty($item['icon']['image'])) { ?>
+                                    <img class="vs-btn-icon <?= !empty($item['icon']['position']) ? ' ' . $item['icon']['position'] : ''; ?>" src="<?= $item['icon']['image']['url'];?>" alt="<?= $item['icon']['image']['title'];?>">
+                                <?php } ?>
+                            </a>
+                        <?php }
+                    } ?>
                 <?php } ?>
             </div>
         <?php } ?>
